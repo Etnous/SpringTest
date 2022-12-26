@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="biz.lala.SpringBoot.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="biz.lala.SpringBoot.dao.UserPojo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="TINYINT" property="age"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="deleted" jdbcType="BIT" property="deleted"/>
+    </resultMap>
+
+    <select id="myGetById" resultType="biz.lala.SpringBoot.dao.UserPojo">
+        SELECT name, age, user_type FROM mp_user WHERE id=#{id}
+    </select>
+
+</mapper>

@@ -10,23 +10,23 @@ public enum ResultEnum {
     /**
      * 成功
      */
-    SUCCESS(2000, "success"),
+    SUCCESS(200, "success"),
     /**
      * 失败
      */
-    ERROR(5000, "error"),
+    ERROR(500, "error"),
     /**
      * 传参出错
      */
-    PARAM_ERROR(5001, "params error"),
+    PARAM_ERROR(501, "params error"),
     /**
      * 必传参数丢失
      */
-    PARAM_MISS_ERROR(5002, "param miss"),
+    PARAM_MISS_ERROR(502, "param miss"),
     /**
      * 记录不存在
      */
-    RECORD_NOT_EXIST(5003, "record is not exist!");
+    RECORD_NOT_EXIST(503, "record is not exist!");
 
     private final Integer code;
 
