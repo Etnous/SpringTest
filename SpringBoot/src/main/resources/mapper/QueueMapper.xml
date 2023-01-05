@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="biz.lala.SpringBoot.mapper.ranker.QueueMapper">
+    <resultMap id="BaseResultMap" type="biz.lala.SpringBoot.dao.ranker.QueuePojo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <select id="selectOneItem" resultMap="BaseResultMap" >
+        select * from queue where status = 1 limit 1
+    </select>
+</mapper>

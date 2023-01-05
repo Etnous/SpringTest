@@ -4,14 +4,26 @@ server:
     context-path:
 spring:
   datasource:
-    username: root
+    url: jdbc:mysql://43.155.111.128:3306/rankerinfo2023?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+    username: rankerinfo2023
     password: Umr_1123581321
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.31.117:3306/mp?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+
+  redis:
+    password: Umr_1123581321
+    host: cscu.lala.biz
+    port: 6379
+    database: 0
+    timeout: 6000ms
+
+
 
 
 logging:
   level:
-    biz.lala.SpringBoot: debug
+    biz.lala.SpringBoot: info
 mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: false
+

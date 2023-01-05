@@ -18,21 +18,21 @@ import java.util.Map;
 public class UserController {
 
 
-    private UserMapper userMapper;
-
-    @Autowired
-    public void setUserMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
-
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public Result hello() throws Exception {
-//        UserPojo userPojo = userMapper.myGetById(1L);
-        ProxyEntity proxyEntity = new ProxyEntity();
-        proxyEntity.setProxyIp("120.24.76.81").setProxyPort(8123).setProxyType("http");
-        Map<String, String> params = new HashMap<>();
-        params.put("regionId", "166");
-        String s = HttpUtil.httpGetRequest("https://yikaoyan-api.51easymaster.com/v1/rank/school/", params, proxyEntity);
-        return Result.success(s);
-    }
+//    private UserMapper userMapper;
+//
+//    @Autowired
+//    public void setUserMapper(UserMapper userMapper) {
+//        this.userMapper = userMapper;
+//    }
+//
+//    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+//    public Result hello() throws Exception {
+////        UserPojo userPojo = userMapper.myGetById(1L);
+//        ProxyEntity proxyEntity = new ProxyEntity();
+//        proxyEntity.setProxyIp("120.24.76.81").setProxyPort(8123).setProxyType("http");
+//        Map<String, String> params = new HashMap<>();
+//        params.put("regionId", "166");
+//        String s = HttpUtil.httpGetRequest("https://yikaoyan-api.51easymaster.com/v1/rank/school/", params, proxyEntity);
+//        return Result.success(s);
+//    }
 }
