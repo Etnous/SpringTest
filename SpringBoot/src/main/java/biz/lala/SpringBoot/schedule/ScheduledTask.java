@@ -1,5 +1,6 @@
 package biz.lala.SpringBoot.schedule;
 
+import biz.lala.SpringBoot.cache.ProxyCache;
 import biz.lala.SpringBoot.dao.ranker.QueuePojo;
 import biz.lala.SpringBoot.mapper.ranker.QueueMapper;
 import biz.lala.SpringBoot.service.RankerService;
@@ -32,16 +33,20 @@ public class ScheduledTask {
     @Autowired
     private QueueMapper queueMapper;
 
+    @Autowired
+    private ProxyCache proxyCache;
+
     @Scheduled(fixedRate = 10)
     public void schoolSchedule() {
 
-        if (!ThreadPoolUtil.checkIsAvailable(rankerPool, 20)) {
+        if (!ThreadPoolUtil.checkIsAvailable(rankerPool, 200)) {
 //            log.info("任务队列已满");
             return;
         }
 //        rankerService.getSchool();
 //        String finalUrl = (String) redisTemplate.opsForList().rightPop("collegeQueue");
-        String finalUrl = (String) redisTemplate.opsForList().rightPop("majorQueue");
+//        String finalUrl = (String) redisTemplate.opsForList().rightPop("majorQueue");
+        String finalUrl = (String) redisTemplate.opsForList().rightPop("subjectQueue");
         if (Objects.isNull(finalUrl)) return;
         queueMapper.insert(new QueuePojo(null, finalUrl, 1));
 
@@ -49,11 +54,16 @@ public class ScheduledTask {
 
     @Scheduled(fixedRate = 10)
     public void workSchedule() {
-        if (!ThreadPoolUtil.checkIsAvailable(rankerPool, 20)) {
+        if (!ThreadPoolUtil.checkIsAvailable(rankerPool, 200)) {
 //            log.info("任务队列已满");
             return;
         }
 //        rankerService.getCollege();
-        rankerService.getMajor();
+//        rankerService.getMajor();
+        rankerService.getSubject();
+    }
+    @Scheduled(fixedRate = 1000)
+    public void checkProxy() throws Exception {
+        proxyCache.updateProxy();
     }
 }

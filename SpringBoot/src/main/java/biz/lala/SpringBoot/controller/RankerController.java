@@ -2,9 +2,11 @@ package biz.lala.SpringBoot.controller;
 
 import biz.lala.SpringBoot.config.redis.AnnouncementMessage;
 import biz.lala.SpringBoot.dao.ranker.CollegePojo;
+import biz.lala.SpringBoot.dao.ranker.MajorPojo;
 import biz.lala.SpringBoot.dao.ranker.ProvincePojo;
 import biz.lala.SpringBoot.dao.ranker.SchoolPojo;
 import biz.lala.SpringBoot.mapper.ranker.CollegeMapper;
+import biz.lala.SpringBoot.mapper.ranker.MajorMapper;
 import biz.lala.SpringBoot.mapper.ranker.ProvinceMapper;
 import biz.lala.SpringBoot.mapper.ranker.SchoolMapper;
 import biz.lala.SpringBoot.util.HttpUtil;
@@ -35,6 +37,9 @@ public class RankerController {
 
     @Autowired
     private CollegeMapper collegeMapper;
+
+    @Autowired
+    private MajorMapper majorMapper;
 
     @RequestMapping(value = "/getProvince", method = RequestMethod.GET)
     public Result getProvince() throws Exception {
@@ -95,6 +100,24 @@ public class RankerController {
             object.put("majorUrl", majorUrl);
             object.put("code", item.getId());
             redisTemplate.opsForList().leftPush("majorQueue", object.toJSONString());
+        });
+        long endTime = System.currentTimeMillis();
+
+        return Result.success("发布完成, 用时:" + (endTime - startTime) + "毫秒");
+    }
+
+    @RequestMapping(value = "/getSubject", method = RequestMethod.GET)
+    public Result getSubject() {
+        String url = "https://api.kaoyanvip.cn/wx/v1/rank/%s/subject/";
+        //  发布subject url
+        long startTime = System.currentTimeMillis();
+        List<MajorPojo> majorPojos = majorMapper.selectList(null);
+        majorPojos.forEach( item -> {
+            String subjectUrl = String.format(url, item.getValue());
+            JSONObject object = new JSONObject();
+            object.put("subjectUrl", subjectUrl);
+            object.put("code", item.getId());
+            redisTemplate.opsForList().leftPush("subjectQueue", object.toJSONString());
         });
         long endTime = System.currentTimeMillis();
 

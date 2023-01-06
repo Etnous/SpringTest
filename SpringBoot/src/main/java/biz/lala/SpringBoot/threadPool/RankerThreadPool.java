@@ -14,9 +14,9 @@ public class RankerThreadPool {
     public ThreadPoolTaskExecutor rankerThreadPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
-        executor.setCorePoolSize(50);
-        executor.setMaxPoolSize(50);
-        executor.setQueueCapacity(20);
+        executor.setCorePoolSize(200);
+        executor.setMaxPoolSize(200);
+        executor.setQueueCapacity(200);
         executor.setKeepAliveSeconds(1);
         executor.setThreadNamePrefix("Ranker-");
 

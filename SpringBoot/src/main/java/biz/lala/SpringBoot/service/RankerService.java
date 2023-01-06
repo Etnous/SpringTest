@@ -9,4 +9,6 @@ public interface RankerService {
     void getCollege();
 
     void getMajor();
+
+    void getSubject();
 }

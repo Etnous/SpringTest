@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class HttpUtil {
 
     public static String httpGetRequest(String url, Map<String, String> paramsMap, ProxyEntity proxy) throws Exception {
-        CloseableHttpClient httpClient = HttpClients.custom().evictIdleConnections(5, TimeUnit.SECONDS).build();
+        CloseableHttpClient httpClient = HttpClients.custom().evictIdleConnections(1, TimeUnit.SECONDS).build();
         if (!Objects.isNull(paramsMap)) {
             List<BasicNameValuePair> list = new ArrayList<>();
             paramsMap.forEach( (key, value) -> list.add(new BasicNameValuePair(key, value)));

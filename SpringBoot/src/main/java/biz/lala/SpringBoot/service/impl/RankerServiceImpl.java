@@ -2,10 +2,7 @@ package biz.lala.SpringBoot.service.impl;
 
 import biz.lala.SpringBoot.cache.ProxyCache;
 import biz.lala.SpringBoot.dao.ranker.*;
-import biz.lala.SpringBoot.mapper.ranker.CollegeMapper;
-import biz.lala.SpringBoot.mapper.ranker.MajorMapper;
-import biz.lala.SpringBoot.mapper.ranker.QueueMapper;
-import biz.lala.SpringBoot.mapper.ranker.SchoolMapper;
+import biz.lala.SpringBoot.mapper.ranker.*;
 import biz.lala.SpringBoot.service.RankerService;
 import biz.lala.SpringBoot.util.HttpUtil;
 import com.alibaba.fastjson.JSON;
@@ -40,6 +37,9 @@ public class RankerServiceImpl implements RankerService {
 
     @Autowired
     private MajorMapper majorMapper;
+
+    @Autowired
+    private SubjectMapper subjectMapper;
 
     @Autowired
     private ProxyCache proxyCache;
@@ -139,6 +139,40 @@ public class RankerServiceImpl implements RankerService {
         } catch (Exception exception) {
             exception.printStackTrace();
             redisTemplate.opsForList().leftPush("majorQueue", queuePojo.getContent());
+            queueMapper.deleteById(queuePojo.getId());
+        }
+    }
+
+    @Override
+    @Async("rankerPool")
+    public void getSubject() {
+        // TODO: 从redis取出队列放入工作队列，若完成则删除工作队列，若失败则放回redis队列
+        QueuePojo queuePojo;
+        synchronized (this) {
+            queuePojo = queueMapper.selectOneItem();
+            if (Objects.isNull(queuePojo)) {
+//                log.info("线程关闭" + System.currentTimeMillis());
+                return;
+            }
+            log.info("获取任务队列:[{}]",queuePojo.getContent());
+            queuePojo.setStatus(2);
+            queueMapper.updateById(queuePojo);
+        }
+        try {
+            JSONObject finalObject = JSON.parseObject(queuePojo.getContent());
+            String s = HttpUtil.httpGetRequest(finalObject.getString("subjectUrl"), null, proxyCache.getProxy());
+            JSONObject retObj = JSON.parseObject(s);
+            JSONArray retArray = retObj.getJSONArray("data");
+            if (retArray.size() != 0) {
+                retArray.forEach( item -> {
+                    SubjectPojo subjectPojo = new SubjectPojo(null, (String) item, finalObject.getInteger("code"));
+                    subjectMapper.insert(subjectPojo);
+                });
+            }
+            queueMapper.deleteById(queuePojo.getId());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            redisTemplate.opsForList().leftPush("subjectQueue", queuePojo.getContent());
             queueMapper.deleteById(queuePojo.getId());
         }
     }
